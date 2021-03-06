@@ -42,7 +42,7 @@ The testing `git-hub-link` is mnist for
 
     -------
     ###  | Requires to add colab link |
-    The colab is not Opened Yet < : smile : >
+    The colab is not Opened Yet < :smile: >
     ------
     | Model | Colab |
     |---|---|
