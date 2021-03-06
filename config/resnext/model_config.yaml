@@ -1,0 +1,2 @@
+# architecture config
+cardinality: 32   # cardinality = how many parallel blocks on block
