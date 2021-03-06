@@ -1,0 +1,6 @@
+pyyaml
+tensorflow
+tensorflow_datasets
+matplotlib
+numpy
+tqdm
