@@ -60,4 +60,15 @@ The testing `git-hub-link` is mnist for
 
 7. Create Docker File to test the repository
 
+<br/><br/>
+
+
+## Arxiv Links
+
+:one: [Aggregated Residual Transformations for Deep Neural Networks](https://arxiv.org/abs/1611.05431)
+
+:two: [An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale](https://arxiv.org/abs/2010.11929)
+
+:three: [EfficientNet: Rethinking Model Scaling for Convolutional Neural Networks](https://arxiv.org/abs/1905.11946)
+
 
