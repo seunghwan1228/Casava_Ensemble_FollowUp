@@ -2,14 +2,12 @@ import tensorflow as tf
 import numpy as np
 import cv2
 import albumentations as A
-from tensorflow.python.ops.gen_math_ops import select
-
+from preprocess.datadownlader import TFDownloadDataset
 
 class Preprocess:
     def __init__(self, config):
         self.config = config
         
-    
     @tf.function
     def resize_img(self, img):
         img = tf.image.resize(img, size=(self.config['image_height'],
@@ -88,6 +86,28 @@ class Preprocess:
         img = self.restore_clahe_img_shape(img)
         return img
     
+
+class DataLoader:
+    def __init__(self, config):
+        self.config = config
+        self.preprocessor = Preprocess(config=self.config)
+        
+        if self.config['from_tfds']:
+            self.datadownloader = TFDownloadDataset(config=self.config)
+        
+            self.data, self.info = self.datadownloader
+            
+            if len(self.data) == 2:
+                self.train_data = self.data['train']
+                self.test_data = self.data['valid']
+            
+            else:
+                self.train_data = self.data['train']
+                self.valid_data = self.data['valid']
+                self.test_data = self.data['test']
+    
+    def load_data(self):
+        pass
 
     
 
