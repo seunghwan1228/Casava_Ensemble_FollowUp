@@ -2,6 +2,7 @@ from pathlib import Path
 import numpy as np
 import ruamel.yaml
 import os
+import sys
 
 
 class ConfigManager:
@@ -30,6 +31,16 @@ class ConfigManager:
         configs = self._merge_config_dict(config_list)
         return configs
 
+    def print_config(self, full_config_dict):
+        for key, value in full_config_dict.items():
+            print(f' - {key}: {value}')
+    
+    def dump_config(self, full_config_dict, model_name):
+        os.makedirs((Path(full_config_dict['log_directory']) / model_name), exist_ok=True)
+        with open(Path(full_config_dict['log_directory']) /model_name/'configs.yaml', 'w') as cfg_writer:
+            self._yaml_loader.dump(full_config_dict, cfg_writer)    
+    
+    
 
 
 
@@ -38,4 +49,5 @@ if __name__ == "__main__":
     tmp_list = tmp_config._load_multiple_config()
     tmp_full_loaded = tmp_config._merge_config_dict(tmp_list)
     print(tmp_full_loaded)
-
+    tmp_config.print_config(tmp_full_loaded)
+    tmp_config.dump_config(tmp_full_loaded, 'vit')
