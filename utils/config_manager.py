@@ -1,8 +1,7 @@
 from pathlib import Path
-import numpy as np
 import ruamel.yaml
 import os
-import sys
+from datetime import datetime
 
 
 class ConfigManager:
@@ -32,15 +31,22 @@ class ConfigManager:
         return configs
 
     def print_config(self, full_config_dict):
+        print('\nCONFIGURATION\n')
         for key, value in full_config_dict.items():
             print(f' - {key}: {value}')
     
+    def _update_config(self, full_config_dict):
+        full_config_dict['experiment_time'] = datetime.now().strftime('%Y%m%d_%H%M%S')
+        return full_config_dict
+
     def dump_config(self, full_config_dict, model_name):
+        full_config_dict = self._update_config(full_config_dict)
         os.makedirs((Path(full_config_dict['log_directory']) / model_name), exist_ok=True)
         with open(Path(full_config_dict['log_directory']) /model_name/'configs.yaml', 'w') as cfg_writer:
-            self._yaml_loader.dump(full_config_dict, cfg_writer)    
+            self._yaml_loader.dump(full_config_dict, cfg_writer)
     
     
+
 
 
 
