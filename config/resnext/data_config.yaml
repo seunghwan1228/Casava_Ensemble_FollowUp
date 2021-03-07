@@ -3,7 +3,8 @@ data_directory: '/path/to/dataset'
 log_directory: '/path/to/logdir'
 
 # dataname
-data_name: "casava"
+data_name: "cassava"
+from_tfds: True
 
 # Image Shape 
 image_height: 224

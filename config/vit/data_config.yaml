@@ -3,7 +3,7 @@ data_directory: '/path/to/dataset'
 log_directory: '/path/to/logdir'
 
 # dataname
-data_name: "casava"
+data_name: "cassava"
 
 # Image Shape 
 image_height: 224
