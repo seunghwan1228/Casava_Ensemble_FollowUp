@@ -4,3 +4,5 @@ tensorflow_datasets
 matplotlib
 numpy
 tqdm
+opencv-python
+albumentations
