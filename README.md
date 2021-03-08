@@ -72,3 +72,12 @@ The testing `git-hub-link` is mnist for
 :three: [EfficientNet: Rethinking Model Scaling for Convolutional Neural Networks](https://arxiv.org/abs/1905.11946)
 
 
+## Work Sheet : 21.03.07
+
+- [ ] Create data utility
+- [ ] Create Architectures
+- [ ] Train Models
+- [ ] Ensemble try
+- [ ] Summary Paper
+
+
