@@ -95,7 +95,7 @@ class DataLoader:
         if self.config['from_tfds']:
             self.datadownloader = TFDownloadDataset(config=self.config)
         
-            self.data, self.info = self.datadownloader
+            self.data, self.info = self.datadownloader.get_data()
             
             if len(self.data) == 2:
                 self.train_data = self.data['train']
@@ -106,7 +106,16 @@ class DataLoader:
                 self.valid_data = self.data['valid']
                 self.test_data = self.data['test']
     
-    def load_data(self):
+    def preprocess_data(self):
+        pass
+    
+    def get_train_data(self):
+        pass
+    
+    def get_valid_data(self):
+        pass
+    
+    def load_datasets(self):
         pass
 
     
