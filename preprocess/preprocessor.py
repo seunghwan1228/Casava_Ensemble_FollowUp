@@ -4,17 +4,17 @@ import cv2
 import albumentations as A
 from preprocess.datadownlader import TFDownloadDataset
 
-class Preprocess:
+class Preprocessor:
     def __init__(self, config):
         self.config = config
         
-    @tf.function
+
     def resize_img(self, img):
         img = tf.image.resize(img, size=(self.config['image_height'],
                                          self.config['image_width']))
         return img
     
-    @tf.function
+
     def standard_normalize_img(self, img):
         img = tf.cast(img, tf.float32)
         img = (img / 127.5) - 1
@@ -27,43 +27,37 @@ class Preprocess:
         """
         return (img * 0.5) + 0.5
     
-    @tf.function
+
     def minmax_normalize_img(self, img):
         img = tf.cast(img, tf.float32)
         img = img / 255.
         return img
     
     # Augmentation functions
-    @tf.function
+
     def random_resize_crop_img(self, img):
-        variable = tf.random.uniform(())
-        if variable >= 0.5:
-            img = tf.image.resize(img, size=(self.config['image_height'] + 72,
-                                            self.config['image_width'] + 72))
-            img = tf.image.random_crop(img, size=(self.config['image_height'],
-                                                self.config['image_width']))
+        img = tf.image.resize(img, size=(self.config['image_height'] + 72,
+                                        self.config['image_width'] + 72,
+                                        ))
+        img = tf.image.random_crop(img, size=(self.config['image_height'],
+                                            self.config['image_width'],
+                                            self.config['image_channel']))
         return img
     
-    @tf.function
+
     def random_horizontal_flip_img(self, img):
-        variable = tf.random.uniform(())
-        if variable >= 0.5:
-            img = tf.image.random_flip_up_down(img)
+        img = tf.image.random_flip_up_down(img)
         return img
     
-    @tf.function
+
     def random_vertical_flip_img(self, img):
-        variable = tf.random.uniform(())
-        if variable >= 0.5:
-            img = tf.image.random_flip_left_right(img)
+        img = tf.image.random_flip_left_right(img)
         return img
 
-    @tf.function
+
     def random_rotation_img(self, img):
-        variable = tf.random.uniform(())
-        if variable >= 0.5:
-            rot_variable = tf.random.uniform((), minval=1, maxval=4, dtype=tf.int32)
-            img = tf.image.rot90(img, rot_variable)
+        rot_variable = tf.random.uniform((), minval=1, maxval=4, dtype=tf.int32)
+        img = tf.image.rot90(img, rot_variable)
         return img
     
     def clahe_img(self, img):
@@ -90,7 +84,7 @@ class Preprocess:
 class DataLoader:
     def __init__(self, config):
         self.config = config
-        self.preprocessor = Preprocess(config=self.config)
+        self.preprocessor = Preprocessor(config=self.config)
         
         if self.config['from_tfds']:
             self.datadownloader = TFDownloadDataset(config=self.config)
@@ -106,8 +100,22 @@ class DataLoader:
                 self.valid_data = self.data['valid']
                 self.test_data = self.data['test']
     
-    def preprocess_data(self):
-        pass
+    def preprocess_data(self, img):
+        img = self.preprocessor.tf_clahe_img(img)
+        img = self.preprocessor.resize_img(img)
+        img = self.preprocessor.random_horizontal_flip_img(img)
+        img = self.preprocessor.random_vertical_flip_img(img)
+        img = self.preprocessor.random_resize_crop_img(img)
+        if self.config['normalizer'] == 'standard':
+            img = self.preprocessor.standard_normalize_img(img)
+        else:
+            img = self.preprocessor.minmax_normalize_img(img)
+            
+        return img
+    
+    def tf_preprocess_data(self, img, target):
+        img = self.preprocess_data(img)
+        return (img, target)
     
     def get_train_data(self):
         pass
@@ -127,7 +135,7 @@ if __name__ == "__main__":
     
     config = ConfigManager('config/resnext').get_config()
     tfdata = TFDownloadDataset(config=config)
-    preprocessor = Preprocess(config=config)
+    preprocessor = Preprocessor(config=config)
     
     dataset, info = tfdata.get_data()
     
@@ -137,9 +145,17 @@ if __name__ == "__main__":
     tmp_train = tmp_train.map(preprocessor.tf_clahe_img)
     tmp_train = tmp_train.map(preprocessor.standard_normalize_img)
     
+    # ----------------------------- DATA LOADER Test ----------------- #
+    data_loader = DataLoader(config=config)
     
-    for sample in tmp_train.take(1):
+    tmp_preprocessed = train.map(data_loader.tf_preprocess_data)
+    
+    tmp_preprocessed
+    
+    for sample in tmp_preprocessed.take(1):
         pass
-    plt.imshow(preprocessor.de_standard_normalize_img(sample))
+    
+
+    plt.imshow(preprocessor.de_standard_normalize_img(sample[0]))
     plt.show()
 
