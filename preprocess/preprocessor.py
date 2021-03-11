@@ -8,13 +8,13 @@ class Preprocessor:
     def __init__(self, config):
         self.config = config
         
-
     def resize_img(self, img):
         img = tf.image.resize(img, size=(self.config['image_height'],
-                                         self.config['image_width']))
+                                         self.config['image_width']),
+                            #   antialias=True,
+                              method=tf.image.ResizeMethod.NEAREST_NEIGHBOR)
         return img
     
-
     def standard_normalize_img(self, img):
         img = tf.cast(img, tf.float32)
         img = (img / 127.5) - 1
@@ -27,14 +27,12 @@ class Preprocessor:
         """
         return (img * 0.5) + 0.5
     
-
     def minmax_normalize_img(self, img):
         img = tf.cast(img, tf.float32)
         img = img / 255.
         return img
     
     # Augmentation functions
-
     def random_resize_crop_img(self, img):
         img = tf.image.resize(img, size=(self.config['image_height'] + 72,
                                         self.config['image_width'] + 72,
@@ -44,16 +42,13 @@ class Preprocessor:
                                             self.config['image_channel']))
         return img
     
-
     def random_horizontal_flip_img(self, img):
         img = tf.image.random_flip_up_down(img)
         return img
     
-
     def random_vertical_flip_img(self, img):
         img = tf.image.random_flip_left_right(img)
         return img
-
 
     def random_rotation_img(self, img):
         rot_variable = tf.random.uniform((), minval=1, maxval=4, dtype=tf.int32)
@@ -100,7 +95,7 @@ class DataLoader:
                 self.valid_data = self.data['valid']
                 self.test_data = self.data['test']
     
-    def preprocess_data(self, img):
+    def preprocess_train_data(self, img):
         img = self.preprocessor.tf_clahe_img(img)
         img = self.preprocessor.resize_img(img)
         img = self.preprocessor.random_horizontal_flip_img(img)
@@ -113,18 +108,42 @@ class DataLoader:
             
         return img
     
-    def tf_preprocess_data(self, img, target):
-        img = self.preprocess_data(img)
+    def tf_preprocess_train_data(self, img, target):
+        img = self.preprocess_train_data(img)
         return (img, target)
     
-    def get_train_data(self):
-        pass
     
-    def get_valid_data(self):
-        pass
+    def preprocess_eval_data(self, img):
+        img = self.preprocessor.resize_img(img)
+        if self.config['normalizer'] == 'standard':
+            img = self.preprocessor.standard_normalize_img(img)
+        else:
+            img = self.preprocessor.minmax_normalize_img(img)
+        return img
+    
+    def tf_preprocess_valid_data(self, img, target):
+        img = self.preprocess_eval_data(img)
+        return (img, target)
+
+    
+    def get_train_data(self, dataset):
+        train_dataset = dataset.map(self.tf_preprocess_train_data, num_parallel_calls=tf.data.experimental.AUTOTUNE)
+        train_dataset = train_dataset.batch(self.config['batch_size'])
+        train_dataset = train_dataset.repeat()
+        train_dataset = train_dataset.prefetch(tf.data.experimental.AUTOTUNE)
+        return train_dataset
+    
+    def get_valid_data(self, dataset):
+        eval_dataset = dataset.map(self.tf_preprocess_valid_data, num_parallel_calls=tf.data.experimental.AUTOTUNE)
+        eval_dataset = eval_dataset.batch(self.config['batch_size'])
+        eval_dataset = eval_dataset.prefetch(tf.data.experimental.AUTOTUNE)
+        return eval_dataset
     
     def load_datasets(self):
-        pass
+        train_dataset = self.get_train_data(self.train_data)
+        valid_dataset = self.get_valid_data(self.valid_data)
+        
+        return train_dataset, valid_dataset
 
     
 
@@ -146,16 +165,20 @@ if __name__ == "__main__":
     tmp_train = tmp_train.map(preprocessor.standard_normalize_img)
     
     # ----------------------------- DATA LOADER Test ----------------- #
+    
     data_loader = DataLoader(config=config)
+    tmp_train, tmp_valid = data_loader.load_datasets()
     
-    tmp_preprocessed = train.map(data_loader.tf_preprocess_data)
+    # ---------------------------- SHOW IMAGE ------------------------- # 
     
-    tmp_preprocessed
-    
-    for sample in tmp_preprocessed.take(1):
+    for sample in tmp_train.take(1):
         pass
-    
 
-    plt.imshow(preprocessor.de_standard_normalize_img(sample[0]))
+    fig = plt.figure()
+    for img_idx in range(25):
+        fig.add_subplot(5,5, img_idx+1)
+        plt.imshow(preprocessor.de_standard_normalize_img(sample[0][img_idx]))
+        plt.axis('off')
+        plt.tight_layout()
     plt.show()
 
