@@ -9,10 +9,7 @@ class Preprocessor:
         self.config = config
         
     def resize_img(self, img):
-        img = tf.image.resize(img, size=(self.config['image_height'],
-                                         self.config['image_width']),
-                            #   antialias=True,
-                              method=tf.image.ResizeMethod.NEAREST_NEIGHBOR)
+        img = tf.image.resize(img, size=(self.config['image_height'], self.config['image_width']), method=tf.image.ResizeMethod.NEAREST_NEIGHBOR)
         return img
     
     def standard_normalize_img(self, img):
@@ -33,23 +30,23 @@ class Preprocessor:
         return img
     
     # Augmentation functions
+    @tf.function
     def random_resize_crop_img(self, img):
-        img = tf.image.resize(img, size=(self.config['image_height'] + 72,
-                                        self.config['image_width'] + 72,
-                                        ))
-        img = tf.image.random_crop(img, size=(self.config['image_height'],
-                                            self.config['image_width'],
-                                            self.config['image_channel']))
+        img = tf.image.resize(img, size=(self.config['image_height'] + 72, self.config['image_width'] + 72))
+        img = tf.image.random_crop(img, size=(self.config['image_height'], self.config['image_width'], self.config['image_channel']))
         return img
-    
+
+    @tf.function
     def random_horizontal_flip_img(self, img):
         img = tf.image.random_flip_up_down(img)
         return img
-    
+
+    @tf.function
     def random_vertical_flip_img(self, img):
         img = tf.image.random_flip_left_right(img)
         return img
 
+    @tf.function
     def random_rotation_img(self, img):
         rot_variable = tf.random.uniform((), minval=1, maxval=4, dtype=tf.int32)
         img = tf.image.rot90(img, rot_variable)
@@ -59,8 +56,7 @@ class Preprocessor:
         params = np.arange(3, 30, 3)
         select_param = np.random.choice(params, 1)
         select_param = int(select_param)
-        transform = A.Compose([A.CLAHE(clip_limit=float(select_param), 
-                                       tile_grid_size=(select_param, select_param))])
+        transform = A.Compose([A.CLAHE(clip_limit=float(select_param), tile_grid_size=(select_param, select_param))])
         img = transform(image=img)
         img = img['image']
         return tf.cast(img, tf.float32)
