@@ -23,16 +23,16 @@ class ResnetBlock(tf.keras.layers.LayeR):
         self.conv_1_act = tf.keras.layers.Activation('relu')
         
         self.conv_2 = tf.keras.layers.Conv2D(filters=self.conv_1_2_filters,
-                                            kernel_size=(3,3),
-                                            strides=(1,1),
-                                            padding='same')
+                                             kernel_size=(3,3),
+                                             strides=(1,1),
+                                             padding='same')
         self.conv_2_bn = tf.keras.layers.BatchNormalization()
         self.conv_2_act = tf.keras.layers.Activation('relu')
         
         self.conv_3 = tf.keras.layers.Conv2D(self.conv_3_filters, 
-                                            kernel_size=(1,1),
-                                            strides=(1,1),
-                                            padding='same')
+                                             kernel_size=(1,1),
+                                             strides=(1,1),
+                                             padding='same')
         self.conv_3_bn = tf.keras.layers.BatchNormalization()
         self.conv_3_act = tf.keras.layers.Activation('relu')
         
