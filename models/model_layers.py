@@ -124,6 +124,11 @@ class ResNextSumBlock(tf.keras.layers.Layer):
 
 class ResNextConcatBlock(tf.keras.layers.Layer):
     def __init__(self, conv_1_2_filters, conv_3_filters, cardinality, **kwargs):
+        """
+        Type - B
+        Building Blocks of ResNeXt
+        (b) implementing early concatenation
+        """
         super(ResNextConcatBlock, self).__init__(**kwargs)
         self.conv_1_2_filters = conv_1_2_filters
         self.conv_3_filters = conv_3_filters
@@ -131,7 +136,7 @@ class ResNextConcatBlock(tf.keras.layers.Layer):
         
         self.resnext_block = [ResnextThinBlock(conv_1_2_filters=self.conv_1_2_filters, conv_3_filters=self.conv_3_filters) for _ in range(self.cardinality)]
         self.concatenation = tf.keras.layers.Concatenate()
-        self.conv_bottlenect = tf.keras.layers.Conv2D()
+        self.conv_bottle = tf.keras.layers.Conv2D(filters=self.conv_3_filters, kernel_size=(1,1), strides=(1,1), padding='same', activation='relu')
         
     def call(self, inputs):
         res = inputs
@@ -141,4 +146,5 @@ class ResNextConcatBlock(tf.keras.layers.Layer):
             block_results.append(block_result)
         
         x = self.concatenation(block_results)
-        return x
+        x = self.conv_bottle
+        return x + res
