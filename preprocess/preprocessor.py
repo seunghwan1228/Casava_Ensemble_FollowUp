@@ -73,8 +73,9 @@ class Preprocessor:
     
 
 class DataLoader:
-    def __init__(self, config):
+    def __init__(self, config, dataset=None):
         self.config = config
+        self.dataset = dataset
         self.preprocessor = Preprocessor(config=self.config)
         
         if self.config['from_tfds']:
@@ -90,6 +91,9 @@ class DataLoader:
                 self.train_data = self.data['train']
                 self.valid_data = self.data['valid']
                 self.test_data = self.data['test']
+        else:
+            self.train_data = self.dataset['train']
+            self.valid_data = self.dataset['valid']
     
     def preprocess_train_data(self, img):
         img = self.preprocessor.tf_clahe_img(img)
