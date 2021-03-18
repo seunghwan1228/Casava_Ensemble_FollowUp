@@ -1,5 +1,5 @@
 import tensorflow as tf
-from models.model_layers import ResnextBlock, ResNextSumBlock, ResNextConcatBlock
+from models.resnet_layers.component_layers import ResnextBlock, ResNextSumBlock, ResNextConcatBlock
 
 class ResNextConcat50(tf.keras.Model):
     def __init__(self, config, **kwargs):
