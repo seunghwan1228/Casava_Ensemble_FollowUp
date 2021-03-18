@@ -43,10 +43,12 @@ The testing `git-hub-link` is mnist for
     -------
     ###  | Requires to add colab link |
     The colab is not Opened Yet < :smile: >
+    #### Mar.18.21: DataAugment & ResNext Complete
     ------
     | Model | Colab |
     |---|---|
-    |ResNet|[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)]()|
+    |DataAugment|[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1Otd-0k8B6KDaImEkA7P69qiY-dFz-1rF#scrollTo=N2scrCWto5O5)|
+    |ResNext|[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1SES35GLmmee3tDmWS9Hh6iuKjZ0TZgNZ#scrollTo=8v2J1qrzwOXf)|
     |ViT|[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)]()|
     |Efficientnet B4|[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)]()|
     |Mobilenet V3|[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)]()|
@@ -74,8 +76,12 @@ The testing `git-hub-link` is mnist for
 
 ## Work Sheet : 21.03.07
 
-- [ ] Create data utility
+- [X] Create data utility
 - [ ] Create Architectures
+  - [X] ResNext - Implement by Own Code
+  - [ ] VIT
+  - [ ] MobileNet
+  - [ ] EfficientNet
 - [ ] Train Models
 - [ ] Ensemble try
 - [ ] Summary Paper
