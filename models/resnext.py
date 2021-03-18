@@ -71,12 +71,10 @@ class ResNeXt50(tf.keras.Model):
         for block_2_layer in self.block_2:
             block_2_x = block_2_layer(block_2_x)
             
-        
         block_3_expanditure = self.block_3_exp(block_2_x)
         block_3_x = block_3_expanditure
         for block_3_layer in self.block_3:
             block_3_x = block_3_layer(block_3_x)
-    
     
         block_4_expanditure = self.block_4_exp(block_3_x)
         block_4_x = block_4_expanditure
@@ -84,7 +82,6 @@ class ResNeXt50(tf.keras.Model):
             block_4_x = block_4_layer(block_4_x)
         
         global_pool_result = self.global_pool(block_4_x)
-        
         output_ =  self.output_layer(global_pool_result)
         return output_
 
