@@ -1,26 +1,27 @@
 # architecture config
-conv1_filters: 64
-conv1_kernel: 7
-conv1_strides: 2
+
+base_conv_filters: 64
+base_conv_kernel: 7
+base_conv_strides: 2
 
 maxpool_size: 3
 maxpool_stride: 2
 
-num_conv2_layers: 3
-conv2_1_2_filters: 4
-conv2_3_filters: 256
+num_conv1_layers: 3
+conv1_1_2_filters: 128
+conv1_3_filters: 256
 
-num_conv3_layers: 4
-conv3_1_2_filters: 8
-conv3_3_filters: 512
+num_conv2_layers: 4
+conv2_1_2_filters: 256
+conv2_3_filters: 512
 
-num_conv4_layers: 6
-conv4_1_2_filters: 16
-conv4_3_filters: 1024
+num_conv3_layers: 6
+conv3_1_2_filters: 512
+conv3_3_filters: 1024
 
-num_conv5_layers: 3
-conv5_1_2_filters: 32
-conv5_3_filters: 2048
+num_conv4_layers: 3
+conv4_1_2_filters: 1024
+conv4_3_filters: 2048
 
 cardinality: 32   # cardinality = how many parallel blocks on block
 
