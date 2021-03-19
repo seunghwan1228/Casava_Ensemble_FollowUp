@@ -52,6 +52,10 @@ class Preprocessor:
         img = tf.image.rot90(img, rot_variable)
         return img
     
+    @tf.function
+    def create_patch_data(self, img):
+        pass
+    
     def clahe_img(self, img):
         params = np.arange(3, 30, 3)
         select_param = np.random.choice(params, 1)
@@ -124,8 +128,7 @@ class DataLoader:
     def tf_preprocess_valid_data(self, img, target):
         img = self.preprocess_eval_data(img)
         return (img, target)
-
-    
+        
     def get_train_data(self, dataset):
         train_dataset = dataset.map(self.tf_preprocess_train_data, num_parallel_calls=tf.data.experimental.AUTOTUNE)
         train_dataset = train_dataset.batch(self.config['batch_size'])

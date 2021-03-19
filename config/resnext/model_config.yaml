@@ -1,4 +1,5 @@
 # architecture config
+model_name: "resnext"
 
 base_conv_filters: 64
 base_conv_kernel: 7
