@@ -1,6 +1,9 @@
 # architecture config
 model_name: "resnext"
 
+cardinality: 32   # cardinality = how many parallel blocks on block
+batch_size: 32
+
 base_conv_filters: 64
 base_conv_kernel: 7
 base_conv_strides: 2
@@ -23,8 +26,3 @@ conv3_3_filters: 1024
 num_conv4_layers: 3
 conv4_1_2_filters: 1024
 conv4_3_filters: 2048
-
-cardinality: 32   # cardinality = how many parallel blocks on block
-
-
-batch_size: 32

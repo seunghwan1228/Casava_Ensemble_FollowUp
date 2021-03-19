@@ -51,11 +51,7 @@ class Preprocessor:
         rot_variable = tf.random.uniform((), minval=1, maxval=4, dtype=tf.int32)
         img = tf.image.rot90(img, rot_variable)
         return img
-    
-    @tf.function
-    def create_patch_data(self, img):
-        pass
-    
+        
     def clahe_img(self, img):
         params = np.arange(3, 30, 3)
         select_param = np.random.choice(params, 1)
@@ -74,6 +70,21 @@ class Preprocessor:
         img = tf.numpy_function(func=self.clahe_img, inp=[img], Tout=tf.float32)
         img = self.restore_clahe_img_shape(img)
         return img
+    
+    @tf.function
+    def create_patch_data(self, img, label):
+        """[summary]
+
+        Args:
+            img ([type]): [batch, h, w, c]
+            should be batched
+        """
+        patched_img = tf.image.extract_patches(img,
+                                               sizes=[1, self.config['patch_size'], self.config['patch_size'], 1], 
+                                               strides=[1, self.config['patch_size'], self.config['patch_size'], 1], 
+                                               rates=[1, 1, 1, 1], 
+                                               padding='VALID')
+        return (patched_img, label)
     
 
 class DataLoader:
@@ -112,6 +123,7 @@ class DataLoader:
             
         return img
     
+    
     def tf_preprocess_train_data(self, img, target):
         img = self.preprocess_train_data(img)
         return (img, target)
@@ -132,14 +144,22 @@ class DataLoader:
     def get_train_data(self, dataset):
         train_dataset = dataset.map(self.tf_preprocess_train_data, num_parallel_calls=tf.data.experimental.AUTOTUNE)
         train_dataset = train_dataset.batch(self.config['batch_size'])
+        if 'vit' in self.config['model_name']:
+            train_dataset = train_dataset.map(self.preprocessor.create_patch_data,  num_parallel_calls=tf.data.experimental.AUTOTUNE)
+        
         train_dataset = train_dataset.repeat()
         train_dataset = train_dataset.prefetch(tf.data.experimental.AUTOTUNE)
+        
         return train_dataset
     
     def get_valid_data(self, dataset):
         eval_dataset = dataset.map(self.tf_preprocess_valid_data, num_parallel_calls=tf.data.experimental.AUTOTUNE)
         eval_dataset = eval_dataset.batch(self.config['batch_size'])
+        if 'vit' in self.config['model_name']:
+            eval_dataset = eval_dataset.map(self.preprocessor.create_patch_data,  num_parallel_calls=tf.data.experimental.AUTOTUNE)
+        
         eval_dataset = eval_dataset.prefetch(tf.data.experimental.AUTOTUNE)
+        
         return eval_dataset
     
     def load_datasets(self):
@@ -155,7 +175,7 @@ if __name__ == "__main__":
     from utils.config_manager import ConfigManager
     import matplotlib.pyplot as plt
     
-    config = ConfigManager('config/resnext').get_config()
+    config = ConfigManager('config/vit').get_config()
     tfdata = TFDownloadDataset(config=config)
     preprocessor = Preprocessor(config=config)
     
@@ -176,12 +196,20 @@ if __name__ == "__main__":
     
     for sample in tmp_train.take(1):
         pass
+    
+    
+    print(sample[0].shape)
 
+    vis_sample = sample[0][0]
+
+    print(vis_sample.shape)
+
+    vis_sample = tf.reshape(vis_sample, shape=(14, 14, -1, 3))
+    vis_sample.shape
+    
     fig = plt.figure()
-    for img_idx in range(25):
-        fig.add_subplot(5,5, img_idx+1)
-        plt.imshow(preprocessor.de_standard_normalize_img(sample[0][img_idx]))
+    for img_idx in range(256):
+        fig.add_subplot(14, 14, img_idx+1)
+        plt.imshow(vis_sample[:, :, img_idx, :])
         plt.axis('off')
-        plt.tight_layout()
     plt.show()
-
