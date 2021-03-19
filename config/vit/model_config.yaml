@@ -1,5 +1,5 @@
 # architecture config
-model_name: "vit"
+model_name: "vit" # vit or hybrid
 
 perform_patch: True
 patch_size: 16
