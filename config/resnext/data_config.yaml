@@ -12,6 +12,8 @@ image_width: 224
 image_channel: 3
 channel_last: True
 
+num_classes: 5
+
 # Normalizer
 normalizer: "standard"  # which normalize method will use [standard, minmax, manual_standard, manual_minmax]
 
