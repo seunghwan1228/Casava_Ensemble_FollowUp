@@ -214,9 +214,7 @@ if __name__ == "__main__":
     for sample in tmp_train.take(1):
         pass
     
-    sample[0].shape
-
-    sample[0][0].shape
+    sample[0][0].shape # Vit configure
     # The result is [14, 14, 786]
     # It means that the result is 14 rows and 14 cols of [16, 16, 3] images
     # So, the result is represent as [14, 14, 16, 16, 3]
