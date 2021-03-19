@@ -1,5 +1,4 @@
 import tensorflow as tf
-from tensorflow.python.keras.layers.convolutional import Conv
 from models.resnet_layers.layers import ConvOps, ResNeXtBlockExpand, ResNetBlock, ResNetBlockExpand, ResNeXtBlock, ResNetBlockExpand
 
 
