@@ -1,0 +1,19 @@
+# PATHs
+data_directory: '/path/to/dataset'
+log_directory: '/path/to/logdir'
+
+# dataname
+data_name: "cassava"
+from_tfds: True
+
+# Image Shape 
+image_height: 224
+image_width: 224
+image_channel: 3
+channel_last: True
+
+# Normalizer
+normalizer: "standard"  # which normalize method will use [standard, minmax, manual_standard, manual_minmax]
+
+# Perform train data augmentation
+perform_augment: True
