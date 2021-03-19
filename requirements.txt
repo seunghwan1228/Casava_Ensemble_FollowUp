@@ -1,8 +1,0 @@
-ruamel.yaml     # ruamel.yaml for YAML 1.2 support
-tensorflow-gpu
-tensorflow_datasets
-matplotlib
-numpy
-tqdm
-opencv-python
-albumentations
