@@ -1,5 +1,6 @@
 # architecture config
 model_name: "vit"
 
+perform_patch: True
 patch_size: 16
 batch_size: 32
