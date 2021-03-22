@@ -4,3 +4,7 @@ model_name: "vit" # vit or hybrid
 perform_patch: True
 patch_size: 16
 batch_size: 32
+
+num_heads: 8
+model_dim: 512
+dropout_rate: 0.1
