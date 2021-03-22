@@ -5,6 +5,7 @@ perform_patch: True
 patch_size: 16
 batch_size: 32
 
-num_heads: 8
-model_dim: 512
+num_layers: 12
+num_heads: 12
+model_dim: 768
 dropout_rate: 0.1
