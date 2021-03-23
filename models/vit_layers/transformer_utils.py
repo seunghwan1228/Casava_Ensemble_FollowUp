@@ -22,7 +22,9 @@ class PatchProjection(tf.keras.layers.Layer):
         
         img_flatten = tf.reshape(img_patch, shape=(batch_size, self.N, -1))
         return img_flatten
-    
+
+
+
 class MultiHeadAttention(tf.keras.layers.Layer):
     def __init__(self, num_heads, model_dim, **kwargs):
         super(MultiHeadAttention, self).__init__(**kwargs)

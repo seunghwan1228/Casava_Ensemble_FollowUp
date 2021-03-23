@@ -79,7 +79,7 @@ class Preprocessor:
             img ([type]): [batch, h, w, c]
             should be batched
         """
-        batch_size = img.shape[0]
+
         patched_img = tf.image.extract_patches(img,
                                                sizes=[1, self.config['patch_size'], self.config['patch_size'], 1], 
                                                strides=[1, self.config['patch_size'], self.config['patch_size'], 1], 
@@ -98,7 +98,7 @@ class Preprocessor:
         Returns:
             [type]: [Flatted Image [B, img_h//patch_size * img_w//patch_width, patch_size**2*C] , Label]
         """
-        batch_size = img.shape[0]
+
         flatten_image = tf.reshape(img, shape=(self.config['batch_size'], img.shape[1]*img.shape[2], img.shape[-1]))
         
         return (flatten_image, label)
