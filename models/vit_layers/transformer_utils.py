@@ -3,6 +3,26 @@ import numpy as np
 
 
 
+class PatchProjection(tf.keras.layers.Layer):
+    def __init__(self, input_img_size, patch_size):
+        super(PatchProjection, self).__init__()
+        self.patch_size = patch_size
+        self.input_img_size = input_img_size
+        
+        self.N = (self.input_img_size * self.input_img_size) / (self.patch_size ** 2)
+        
+        
+    def call(self, inputs):
+        batch_size = tf.shape(inputs)[0]
+        img_patch = tf.image.extract_patches(inputs,
+                                             sizes=[1, self.patch_size, self.patch_size, 1],
+                                             strides=[1, self.patch_size, self.patch_size, 1],
+                                             rates=[1, 1, 1, 1],
+                                             padding='VALID')
+        
+        img_flatten = tf.reshape(img_patch, shape=(batch_size, self.N, -1))
+        return img_flatten
+    
 class MultiHeadAttention(tf.keras.layers.Layer):
     def __init__(self, num_heads, model_dim, **kwargs):
         super(MultiHeadAttention, self).__init__(**kwargs)
@@ -69,7 +89,37 @@ class MultiHeadAttention(tf.keras.layers.Layer):
         
         return output_logit, attn_weight
     
+class DenseMLP(tf.keras.layers.Layer):
+    def __init__(self, ff_dim, model_dim, **kwargs):
+        super(DenseMLP, self).__init__(**kwargs)
+        self.ff_dim = ff_dim
+        self.model_dim = model_dim
+        self.ff_layer = tf.keras.layers.Dense(ff_dim, use_bias=False)
+        self.output_layer = tf.keras.layers.Dense(model_dim, use_bias=False)
+        
+    def call(self, inputs):
+        x = self.ff_layer(inputs)
+        x = tf.nn.gelu(x)
+        x = self.output_layer(x)
+        return tf.nn.gelu(x)
     
+class ConvMLP(tf.keras.layers.Layer):
+    def __init__(self, ff_dim, model_dim, **kwargs):
+        super(ConvMLP, self).__init__(**kwargs)
+        self.ff_dim = ff_dim
+        self.model_dim = model_dim
+        self.ff_layer = tf.keras.layers.Conv2D(ff_dim, kernel_size=3, strides=1, padding='same', use_bias=False)
+        self.output_layer = tf.keras.layers.Conv2D(model_dim, kernle_size=3, strides=1, padding='same', use_bias=False)
+    
+    def call(self, inputs):
+        x = self.ff_layer(x)
+        x = tf.nn.gelu(x)
+        x = self.output_layer(x)
+        return tf.nn.gelu(x)
+    
+    
+
+
 if __name__ == "__main__":
     tmp_input = tf.random.uniform(shape=[2, 3, 5])
     
