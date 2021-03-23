@@ -112,7 +112,7 @@ class ConvMLP(tf.keras.layers.Layer):
         self.output_layer = tf.keras.layers.Conv2D(model_dim, kernle_size=3, strides=1, padding='same', use_bias=False)
     
     def call(self, inputs):
-        x = self.ff_layer(x)
+        x = self.ff_layer(inputs)
         x = tf.nn.gelu(x)
         x = self.output_layer(x)
         return tf.nn.gelu(x)
