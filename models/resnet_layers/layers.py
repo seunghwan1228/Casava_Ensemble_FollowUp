@@ -1,6 +1,6 @@
 import tensorflow as tf
 from tensorflow.python.keras.layers.convolutional import Conv
-from tensorflow.python.ops.gen_array_ops import identity
+
 
 
 class ConvOps(tf.keras.layers.Layer):

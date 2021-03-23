@@ -129,11 +129,8 @@ if __name__ == "__main__":
     
     tmp_layer = MultiHeadAttention(4, 12)
     
-    
     tmp_result_logit, tmp_result_weight = tmp_layer(tmp_input, tmp_input, tmp_input, None)
-    
     
     tmp_result_logit.shape
     tmp_result_weight.shape
-    
     tmp_layer.wq.weights
