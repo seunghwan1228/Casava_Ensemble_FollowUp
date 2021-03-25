@@ -16,14 +16,10 @@ class HybridExtractor(tf.keras.layers.Layer):
         
 
 
-
-
-
 if __name__ == '__main__':
     import matplotlib.pyplot as plt
     
     tmp_input = tf.random.uniform(shape=(2, 224, 224, 3))
-    
     plt.imshow(tmp_input[0])
     plt.show()
     
