@@ -9,7 +9,7 @@ class PatchProjection(tf.keras.layers.Layer):
         self.patch_size = patch_size
         self.input_img_size = input_img_size
         
-        self.N = (self.input_img_size * self.input_img_size) / (self.patch_size ** 2)
+        self.N = tf.cast((self.input_img_size * self.input_img_size) / (self.patch_size ** 2), tf.int32)
         
         
     def call(self, inputs):

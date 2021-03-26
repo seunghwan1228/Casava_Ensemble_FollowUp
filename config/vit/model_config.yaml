@@ -1,9 +1,12 @@
 # architecture config
 model_name: "vit" # vit or hybrid
 
-perform_patch: True
-patch_size: 16
 batch_size: 32
+img_size: 224
+
+perform_patch: False
+patch_size: 16
+
 
 num_layers: 12
 num_heads: 12
