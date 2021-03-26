@@ -9,3 +9,33 @@ num_layers: 12
 num_heads: 12
 model_dim: 768
 dropout_rate: 0.1
+
+
+
+
+# Hybrid Architectures from scratch
+
+cardinality: 1   # cardinality = how many parallel blocks on block
+
+base_conv_filters: 64
+base_conv_kernel: 7
+base_conv_strides: 2
+
+maxpool_size: 3
+maxpool_stride: 2
+
+num_conv1_layers: 3
+conv1_1_2_filters: 128
+conv1_3_filters: 256
+
+num_conv2_layers: 4
+conv2_1_2_filters: 256
+conv2_3_filters: 512
+
+num_conv3_layers: 6
+conv3_1_2_filters: 512
+conv3_3_filters: 1024
+
+num_conv4_layers: 3
+conv4_1_2_filters: 1024
+conv4_3_filters: 2048
