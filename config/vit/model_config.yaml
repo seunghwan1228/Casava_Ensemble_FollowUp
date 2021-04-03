@@ -7,11 +7,13 @@ img_size: 224
 perform_patch: False
 patch_size: 16
 
+pool_by_slice: False # slice or mean
 
 num_layers: 12
 num_heads: 12
 model_dim: 768
 dropout_rate: 0.1
+mlp_dim: 3072
 
 
 
