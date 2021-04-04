@@ -4,7 +4,7 @@ model_name: "vit" # vit or hybrid
 batch_size: 32
 img_size: 224
 
-perform_patch: False
+perform_patch: False # Whether perfom patch from Dataloader
 patch_size: 16
 
 pool_by_slice: False # slice or mean
