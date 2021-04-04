@@ -85,5 +85,3 @@ The testing `git-hub-link` is mnist for
 - [ ] Train Models
 - [ ] Ensemble try
 - [ ] Summary Paper
-
-
