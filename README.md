@@ -49,7 +49,7 @@ The testing `git-hub-link` is mnist for
     |---|---|
     |DataAugment|[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1Otd-0k8B6KDaImEkA7P69qiY-dFz-1rF#scrollTo=N2scrCWto5O5)|
     |ResNext|[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1SES35GLmmee3tDmWS9Hh6iuKjZ0TZgNZ#scrollTo=8v2J1qrzwOXf)|
-    |ViT|[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)]()|
+    |ViT|[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1z25VDKFpGj9HIK6AEkJ3zMu0jUu0y7tw#scrollTo=l88Fv1tGfACa)|
     |Efficientnet B4|[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)]()|
     |Mobilenet V3|[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)]()|
 
