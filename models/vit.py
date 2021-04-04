@@ -39,12 +39,13 @@ class VIT(tf.keras.models.Model):
         self.clf_output = tf.keras.layers.Dense(self.config['num_classes'])
         
     def call(self, inputs):
+        batch_size = tf.shape(inputs)[0]
         patch_img = self.patch_projector(inputs)
         patch_context = self.projector(patch_img)
         
         emb_patch_context = self.pos_emb + patch_context # b, 196, dim
         
-        cls_emb = tf.broadcast_to(self.cls_emb, [1, 1, self.config['model_dim']]) # b, 197, dim
+        cls_emb = tf.broadcast_to(self.cls_emb, [batch_size, 1, self.config['model_dim']]) # b, 197, dim
         concat_cls_emb = tf.concat([cls_emb, emb_patch_context], axis=1)
         
         attn_logit, attn_weight_dict = self.mha_layer(concat_cls_emb)
