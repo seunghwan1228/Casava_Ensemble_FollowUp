@@ -42,8 +42,10 @@ The testing `git-hub-link` is mnist for
 
     -------
     ###  | Requires to add colab link |
-    The colab is not Opened Yet < :smile: >
+    The colab is not Opened Fully Yet < :smile: >
     #### Mar.18.21: DataAugment & ResNext Complete
+    Please see Check box on bottom 
+    Test perfomed with Simple Image Classification datasets
     ------
     | Model | Colab |
     |---|---|
