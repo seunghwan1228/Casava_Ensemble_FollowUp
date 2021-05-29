@@ -79,7 +79,7 @@ The testing `git-hub-link` is mnist for
 - [X] Create data utility
 - [ ] Create Architectures
   - [X] ResNext - Implement by Own Code
-  - [ ] VIT
+  - [X] VIT
   - [ ] MobileNet
   - [ ] EfficientNet
 - [ ] Train Models
