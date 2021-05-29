@@ -52,8 +52,14 @@ class ConfigManager:
 
 if __name__ == "__main__":
     tmp_config = ConfigManager('config/resnext')
-    tmp_list = tmp_config._load_multiple_config()
-    tmp_full_loaded = tmp_config._merge_config_dict(tmp_list)
-    print(tmp_full_loaded)
-    tmp_config.print_config(tmp_full_loaded)
-    tmp_config.dump_config(tmp_full_loaded, 'vit')
+    tmp_config.config_path
+    
+    # tmp_list = tmp_config._load_multiple_config()
+    # tmp_full_loaded = tmp_config._merge_config_dict(tmp_list)
+    # print(tmp_full_loaded)
+    
+    config_dict = tmp_config.get_config()
+    tmp_config.print_config(config_dict)
+    
+    # tmp_config.print_config(tmp_full_loaded)
+    # tmp_config.dump_config(tmp_full_loaded, 'vit')

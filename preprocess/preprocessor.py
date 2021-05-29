@@ -51,7 +51,7 @@ class Preprocessor:
         rot_variable = tf.random.uniform((), minval=1, maxval=4, dtype=tf.int32)
         img = tf.image.rot90(img, rot_variable)
         return img
-    
+        
     def clahe_img(self, img):
         params = np.arange(3, 30, 3)
         select_param = np.random.choice(params, 1)
@@ -71,7 +71,39 @@ class Preprocessor:
         img = self.restore_clahe_img_shape(img)
         return img
     
+    @tf.function
+    def create_patch_data(self, img, label):
+        """[summary]
 
+        Args:
+            img ([type]): [batch, h, w, c]
+            should be batched
+        """
+
+        patched_img = tf.image.extract_patches(img,
+                                               sizes=[1, self.config['patch_size'], self.config['patch_size'], 1], 
+                                               strides=[1, self.config['patch_size'], self.config['patch_size'], 1], 
+                                               rates=[1, 1, 1, 1], 
+                                               padding='VALID') # Return [b, img_h//patch, img_w//patch, patch**2*C]
+
+        return (patched_img, label)
+    
+    @tf.function
+    def flat_patch(self, img, label):
+        """[summary]
+        Args:
+            img ([type]): [input image from patched: [B, img_h//patch_size, img_w//patch_width, patch_size**2*C] ]
+            label ([type]): [Label]
+
+        Returns:
+            [type]: [Flatted Image [B, img_h//patch_size * img_w//patch_width, patch_size**2*C] , Label]
+        """
+
+        flatten_image = tf.reshape(img, shape=(self.config['batch_size'], img.shape[1]*img.shape[2], img.shape[-1]))
+        
+        return (flatten_image, label)
+        
+        
 class DataLoader:
     def __init__(self, config, dataset=None):
         self.config = config
@@ -108,6 +140,7 @@ class DataLoader:
             
         return img
     
+    
     def tf_preprocess_train_data(self, img, target):
         img = self.preprocess_train_data(img)
         return (img, target)
@@ -124,19 +157,26 @@ class DataLoader:
     def tf_preprocess_valid_data(self, img, target):
         img = self.preprocess_eval_data(img)
         return (img, target)
-
-    
+        
     def get_train_data(self, dataset):
         train_dataset = dataset.map(self.tf_preprocess_train_data, num_parallel_calls=tf.data.experimental.AUTOTUNE)
         train_dataset = train_dataset.batch(self.config['batch_size'])
+        if ('vit' in self.config['model_name']) and self.config['perform_patch']:
+            train_dataset = train_dataset.map(self.preprocessor.create_patch_data, num_parallel_calls=tf.data.experimental.AUTOTUNE)
+            train_dataset = train_dataset.map(self.preprocessor.flat_patch, num_parallel_calls=tf.data.experimental.AUTOTUNE)
         train_dataset = train_dataset.repeat()
         train_dataset = train_dataset.prefetch(tf.data.experimental.AUTOTUNE)
+        
         return train_dataset
     
     def get_valid_data(self, dataset):
         eval_dataset = dataset.map(self.tf_preprocess_valid_data, num_parallel_calls=tf.data.experimental.AUTOTUNE)
         eval_dataset = eval_dataset.batch(self.config['batch_size'])
+        if ('vit' in self.config['model_name']) and self.config['perform_patch']:
+            eval_dataset = eval_dataset.map(self.preprocessor.create_patch_data,  num_parallel_calls=tf.data.experimental.AUTOTUNE)
+            eval_dataset = eval_dataset.map(self.preprocessor.flat_patch, num_parallel_calls=tf.data.experimental.AUTOTUNE)
         eval_dataset = eval_dataset.prefetch(tf.data.experimental.AUTOTUNE)
+        
         return eval_dataset
     
     def load_datasets(self):
@@ -152,7 +192,7 @@ if __name__ == "__main__":
     from utils.config_manager import ConfigManager
     import matplotlib.pyplot as plt
     
-    config = ConfigManager('config/resnext').get_config()
+    config = ConfigManager('config/vit').get_config()
     tfdata = TFDownloadDataset(config=config)
     preprocessor = Preprocessor(config=config)
     
@@ -173,12 +213,22 @@ if __name__ == "__main__":
     
     for sample in tmp_train.take(1):
         pass
-
-    fig = plt.figure()
-    for img_idx in range(25):
-        fig.add_subplot(5,5, img_idx+1)
-        plt.imshow(preprocessor.de_standard_normalize_img(sample[0][img_idx]))
-        plt.axis('off')
-        plt.tight_layout()
+    
+    sample[0][0].shape # Vit configure
+    # The result is [14, 14, 786]
+    # It means that the result is 14 rows and 14 cols of [16, 16, 3] images
+    # So, the result is represent as [14, 14, 16, 16, 3]
+    
+    if config['perform_patch']:
+        # Reconstruction
+        # recon_img_flat = tf.reshape(sample[0][0], shape=(-1, sample[0][0].shape[-1]))
+        
+        fig = plt.figure()
+        for i in range(196):
+            patch_img = tf.reshape(sample[0][0][i], [16, 16, 3])
+            fig.add_subplot(14, 14, i+1)
+            plt.imshow(patch_img)
+            plt.axis('off')
+    else:
+        plt.imshow(sample[0][0])
     plt.show()
-
